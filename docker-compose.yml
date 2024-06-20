@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/runtime.Dockerfile
+    image: 074531296166.dkr.ecr.ap-southeast-1.amazonaws.com/worldcup2022-web:dev
+    working_dir: /var/www/project/public
+    volumes:
+      - .:/var/www/project/public
+      - .docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+    environment:
+      - PHP_OPCACHE_VALIDATE_TIMESTAMPS=1
+    ports:
+      - 9011:80

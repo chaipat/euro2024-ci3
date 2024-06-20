@@ -1,0 +1,34 @@
+name: Runtime
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY_URI: 074531296166.dkr.ecr.ap-southeast-1.amazonaws.com
+  IMAGE_NAME: worldcup2022-web
+  IMAGE_TAG_NAME: runtime-v1.0
+  AWS_REGION: ap-southeast-1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Amazon ECR "Login" Action for GitHub Actions
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build images
+        run: |
+          docker build --no-cache \
+            -f .docker/runtime.Dockerfile \
+            -t ${{ env.REGISTRY_URI }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_NAME }} \
+            .
+      - name: Push images
+        run: |
+          docker push ${{ env.REGISTRY_URI }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_NAME }}
+

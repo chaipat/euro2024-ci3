@@ -1,0 +1,46 @@
+h2 {
+    font-size: 22px;
+    line-height: 18pt;
+    margin: 0;
+    text-align: center;
+    color: #7f0025;
+}
+.considetail{margin: 0;}
+.considetail .row{margin: 0;}
+.center {
+    text-align: center;
+}
+.col-2 {
+    flex: 0 0 auto;
+    width: 16.67%;
+}
+.col-3 {
+    flex: 0 0 auto;
+    width: 25%;
+}
+.col-8 {
+    flex: 0 0 auto;
+    width: 66.67%;
+}
+.col-9 {
+    flex: 0 0 auto;
+    width: 75%;
+}
+.col-12{
+    flex: 0 0 auto;
+    width: 100%;
+}
+.considetail .border { 
+    border: 1px solid #7f0025;
+}
+.considetail div.row {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+.margintop10{
+  margin-top: 10px;
+}
+.program-result h2, .program-result h2 a{
+    color: #7f0025;
+    font-size: 1.2em;
+}
