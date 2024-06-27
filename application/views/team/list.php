@@ -6,13 +6,13 @@
 
 	<aside class="sidebar">
 		<?php
-		$this->load->view('widgets-rectangle1');
+		// $this->load->view('widgets-rectangle1');
 
 		if(isset($widgets_program)){
 			$this->load->view('widgets-program', $widgets_program);
 		}
 
-		$this->load->view('widgets-rectangle2');
+		// $this->load->view('widgets-rectangle2');
 		$this->load->view('widgets-result');
 		?>
 	</aside>

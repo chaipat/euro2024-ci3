@@ -1,7 +1,18 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Update extends CI_Controller {
-
+	protected $season;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
+	protected $_page = 'team';
+	protected $_cache;
+	protected $hostapi;
+	protected $token;
 	public function __construct(){
         parent::__construct();
 
@@ -20,14 +31,14 @@ class Update extends CI_Controller {
 		$this->stadium_path = 'data/uploads/stadium/';
 		$this->base_path = str_replace('application/controllers', '', __DIR__);
 
-		$this->hostapi = 'https://worldcup2022-dev.ballnaja.com/';
+		$this->hostapi = '';
 
 		$this->token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0b2tlbiB3b3JsZGN1cCAyMDIyIiwiaWF0IjoxNjY4MjI0Nzk4LCJleHAiOjE2NzI0NTgzOTgsImF1ZCI6Imh0dHBzOi8vd29ybGRjdXAyMDIyLmJhbGxuYWphLmNvbSIsInN1YiI6IuC4n-C4uOC4leC4muC4reC4peC5guC4peC4gSAyMDIyIn0.JkJSAWfcFEIVi0wKAjDZsP-gisoHeqAns_tTe3whphg';
 	}
 
 	public function index()
 	{
-		redirect('/');
+		// redirect('/');
 	}
 
 	public function create_jwt()
@@ -202,7 +213,7 @@ class Update extends CI_Controller {
 
 		$match_id = 0;
 		$host = base_url();
-		$action = 'xml/import_fixtures_results/json/worldcup';
+		$action = 'xml/import_fixtures_results/json/euro';
 		$link_chkdata = base_url($action);
 		$create_at = date('Y-m-d H:i:s');
 		// echo $link_chkdata."<hr>";
@@ -210,6 +221,7 @@ class Update extends CI_Controller {
 		if($program_id == 0 && $sel_date == ''){
 			$sel_date = date('Y-m-d');
 		}
+		echo $action;
 
 		$res = $this->callApi($action, null, false, $host, true);
 		// Debug($res);
@@ -650,7 +662,7 @@ class Update extends CI_Controller {
 		$data = array(
 			"meta" => null,
             "webtitle" => 'fixtures',
-			"head" => 'โปรแกรมบอลโลก ผลบอลโลก',
+			"head" => 'โปรแกรมบอลยูโร ผลบอลยูโร',
 			"html" => $html,
 			"content_view" => 'tool/blank'
 		);
@@ -834,6 +846,194 @@ class Update extends CI_Controller {
 
 		return $html;
 	}
+
+	function getmatch_tournament(){
+		$this->load->model('match_model');
+		$this->load->model('team_model');
+		$this->load->model('fixtures_model');
+
+		$list_match_tournament = $this->match_model->getmatch_tournament($this->tournament_id);
+		// Debug($list_match_tournament);
+		$html = $this->display_mathch_xml($list_match_tournament);
+
+		$data = array(
+			"meta" => null,
+            "webtitle" => 'fixtures',
+			"head" => 'โปรแกรมบอลยูโร ผลบอลยูโร',
+			"html" => $html,
+			"content_view" => 'tool/blank'
+		);
+        $this->load->view('template',$data);
+
+	}
+
+	public function display_mathch_xml($obj_list){
+		$html = $tmp = '';
+
+		$datenow = date('Y-m-d');
+
+		// if($this->input->get('reset_stat') == 1){
+
+		// 	$this->team_model->reset_stat_player();
+		// 	Debug($this->db->last_query());
+		// }
+		// $html = anchor();
+
+		if ($obj_list){
+
+			$allitem = count($obj_list);
+		
+			for ($i = 0; $i < $allitem; $i++) {
+
+				$rows = $obj_list[$i];
+				// Debug($rows);
+
+				$program_id = $match_id = $rows->match_id;
+				$stage_id = $rows->stage_id;
+
+				$league_id = $rows->tournament_id;
+				$sel_date = $rows->match_datetime;
+				$stadium_id = $rows->stadium_id;
+
+
+				// $file_group = $rows->file_group;
+				$season_name = $this->season;
+				$kickoff = $rows->match_datetime;
+				$week = $rows->week;
+				$program_status = $rows->match_status;
+				$stadium_id = $rows->stadium_id;
+				$stadium_name = ($rows->stadium != '') ? $rows->stadium : '';
+				$channel_name = '';
+				$group_name = '';
+				$group_id = 0;
+				
+				$hometeam_id = $rows->hteam_id;
+				$logo_hometeam = '';
+				$hometeam_title = $rows->hteam;
+				$hometeam_title_th = $rows->hteam;
+				$hometeam_point = $rows->hgoals;
+				$hometeam_formation = '';
+
+				$awayteam_id = $rows->ateam_id;
+				$logo_awayteam = '';
+				$awayteam_title = $rows->ateam;
+				$awayteam_title_th = $rows->ateam;
+				$awayteam_point = $rows->agoals;
+				$awayteam_formation = '';
+
+				$referee_id = $rows->referee_id;
+
+				$tournament_name = $this->tournament;
+
+				$match_time = date('H:i', strtotime($kickoff.' +7 hour'));
+				// list($match_date, $match_time) = explode(' ', $kickoff);
+
+				// $show_date_th = DateTH($sel_date);
+				$show_date_th = $sel_date;
+
+				$logo_team1 = $logo_team2 = $time_score = '';
+
+				if(file_exists($this->base_path.$this->team_path.$hometeam_id.'.txt')) {
+
+					$file = fopen($this->base_path.$this->team_path.$hometeam_id.'.txt', 'r');
+					//Output lines until EOF is reached
+					while(! feof($file)) {
+						$img_logo = fgets($file);
+						// echo $img_logo. "<br>";
+					}
+					fclose($file);
+	
+					$logo_team1 = $this->load_base64img($img_logo, 25, 20, $hometeam_title);
+				}
+	
+				if(file_exists($this->base_path.$this->team_path.$awayteam_id.'.txt')) {
+	
+					$file = fopen($this->base_path.$this->team_path.$awayteam_id.'.txt', 'r');
+					//Output lines until EOF is reached
+					while(! feof($file)) {
+						$img_logo = fgets($file);
+						// echo $img_logo. "<br>";
+					}
+					fclose($file);
+	
+					$logo_team2 = $this->load_base64img($img_logo, 25, 20, $awayteam_title);
+				}
+
+				// update/match_lineup/0/2022-11-27
+				$lnk_lineupdays = base_url('update/match_lineup/0/'.$sel_date);
+				$update_lineupdays = anchor($lnk_lineupdays, '<button class="btn btn-primary">Update lineup</button>', array('target' => '_blank'));
+
+				if($tmp == ''){
+
+					$html .= '<strong id="'.$sel_date.'">'.$tournament_name.' วันที่ '.$show_date_th.'</strong> ';
+					$tmp = $sel_date;
+				}else if($tmp != $sel_date){
+
+					$html .= '<strong id="'.$sel_date.'">'.$tournament_name.' วันที่ '.$show_date_th.'</strong> ';
+					$tmp = $sel_date;
+				}
+
+				if($program_status != 'FT'){
+
+					$time_score = $match_time;
+					$show_vs = $time_score;
+				}else
+					$show_vs = $hometeam_point.'-'.$awayteam_point;
+
+				$class_endmatch = '';
+				if($datenow == $sel_date){
+
+					$class_endmatch = 'endmatch';
+				}else if($datenow > $sel_date || $i == 0){
+				
+					$class_endmatch = 'endmatch';
+				}
+
+				$link_home = base_url('team/detail/'.$hometeam_id);
+				$link_away = base_url('team/detail/'.$awayteam_id);
+				$link_match_detail = base_url('update/fixture_detail/'.$program_id.'/'.$match_id);
+
+				$show_vs = anchor($link_match_detail, $show_vs, array('target' => '_blank'));
+
+				$update_stat = base_url('update/match_event/'.$program_id);
+				$update_player = anchor($update_stat, '<button class="btn btn-primary">Update stat</button>', array('target' => '_blank'));
+				$lnk_lineup = base_url('update/match_lineup/'.$match_id);
+				$update_lineup = anchor($lnk_lineup, '<button class="btn btn-primary">Update lineup</button>', array('target' => '_blank'));
+
+				
+				$html .= '
+				<div class="row match-list '.$class_endmatch.'">
+					<div class="col-6 right">
+						<div class="row">
+							<div class="col-5 right"><span><a href="'.$link_home.'" target=_blank >'.$hometeam_title_th.' '.$logo_team1.'</a></div>
+							<div class="col-2 center"><strong>'.$show_vs.'</strong></div>
+							<div class="col-5 left"><a href="'.$link_away.'" target=_blank >'.$logo_team2.' '.$awayteam_title_th.'</a></span></div>
+						</div>
+					</div>
+					<div class="col-6">
+						<span>'.$group_name.' program_id:'.$program_id.' </span>
+					</div>
+				</div>';
+
+
+				$data_update = array(
+					'stage_id' => $stage_id,
+					'season' => $this->season,
+					'stadium_id' => $stadium_id,
+					'week' => $week,
+					'referee_id' => $referee_id,
+				);
+				$this->fixtures_model->store_fixid($program_id, $data_update);
+
+				$html .= '<div class="row match-list '.$class_endmatch.'">'.
+				$this->db->last_query()
+				.'</div>';
+			}
+		}
+
+		return $html;
+	}
+
 
 	public function fixture_detail($id)
 	{
@@ -1507,12 +1707,14 @@ class Update extends CI_Controller {
 	public function team()
 	{
 
-		echo '<table width="80%" border=1>
+
+		$html = '<table width="80%" border=1>
 			<tbody>
 				<tr>
 					<th>No.</th>
 					<th>ID</th>
 					<th>Name</th>
+					<th>Name TH</th>
 					<th>Number</th>
 				</tr>';
 		
@@ -1525,8 +1727,13 @@ class Update extends CI_Controller {
 
 			$rows = $res[$i];
 
+			// Debug($rows);
+
 			$team_id = $rows->team_id;
 			$team_name = $rows->team_name;
+			$team_name_en = $rows->team_name_en;
+
+			$action = 'update_team_name('.$team_id.', \'res'.$team_id.'\');';
 
 			$team_player = $this->team_model->team_player($team_id);
 
@@ -1535,10 +1742,23 @@ class Update extends CI_Controller {
 			// @$res[$i]->num_player = $num_player;
 
 			$no = $i + 1;
-			echo '<tr><td>'.$no.'</td><td>'.$team_id.'</td><td>'.$team_name.'</td><td>'.$num_player.'</td></tr>';
+			$html .= '<tr><td>'.$no.'</td><td>'.$team_id.'</td><td>'.$team_name_en.'</td>
+			<td><input type="text" class="form-control" id="team_name'.$team_id.'" value="'.$team_name.'" placeholder="ชื่อภาษาไทย">
+			<button type="button" class="btn btn-primary" onclick="'.$action.'">Update</button></td>
+			<td>'.$num_player.'</td><td><div id="res'.$team_id.'"></div></td></tr>
+			';
 		}
 		// Debug($res);
-		echo '</tbody></table>';
+		$html .= '</tbody></table>';
+
+		$webtitle= '';
+		$data = array(
+            "webtitle" => 'Update Team euro 2024',
+            "breadcrumb" => null,
+			"html" => $html,
+			"content_view" => 'tool/blank'
+        );
+        $this->load->view('template', $data);
 	}
 
 	//Update รายชื่อในทีม
@@ -1551,24 +1771,34 @@ class Update extends CI_Controller {
 		for($i=0;$i<$all;$i++){
 
 			$rows = $res[$i];
-			// Debug($rows);
+			Debug($rows);
 			$profile_id = $rows->profile_id;
 			$player_name = $rows->player_name;
-			$player_name_th = trim($rows->player_name_th);
+			$player_name_th = (isset($rows->player_name_th)) ? trim($rows->player_name_th) : '-';
+			
+			// Debug($player_name_th);
 
 			if($player_name_th == ''){
 
-				$action = 'update/player_detail/'.$profile_id;
-				$res_data = $this->callApi($action);
-				if($res_data[0]->player_name_th != ''){
+				// $action = 'update/player_detail/'.$profile_id;
+				// $res_data = $this->callApi($action);
 
+				// echo "<br>$action<br>";
+				// Debug($res_data);
+
+				// if($res_data[0]->player_name_th != ''){
+
+				/*
 					unset($update_data);
 
 					echo "Update ".$res_data[0]->player_name_th." <br>";
-					$update_data['name_th'] = trim($res_data[0]->player_name_th);
+					$update_data['player_name_th'] = $player_name;
+					$update_data['name_th'] = ($rows->name_th == '') ? trim($rows->name) : $update_data['name_th'];
 					$this->team_model->update_profile($profile_id, $update_data);
-					// Debug($this->db->last_query());
-				}
+					Debug($this->db->last_query());
+				*/
+
+				// }
 			}
 
 		}
@@ -1681,6 +1911,27 @@ class Update extends CI_Controller {
 
 	}
 
+	// Update Team Name
+	function update_team($team_id){
+
+		if($this->input->server('REQUEST_METHOD') === 'POST'){
+
+			// Debug($this->input->post());
+			// $profile_id = $this->input->post('profile_id');
+			$team_name = trim($this->input->post('team_name'));
+
+			$data_update = array('team_name' => $team_name);
+			$this->team_model->store($team_id, $data_update);
+			// Debug($this->db->last_query());
+
+			echo 'Update '.$team_name.' Success.';
+		}else{
+
+			echo 'Error Method.';
+		}
+	}
+
+	// Update Player Name
 	function profile_name($profile_id){
 
 		if($this->input->server('REQUEST_METHOD') === 'POST'){
@@ -1757,7 +2008,7 @@ class Update extends CI_Controller {
 		}
 	}
 
-	private function callApi($action, $key = null, $use_cache = true, $host = '', $json_decode = true, $showdebug = false){
+	private function callApi($action, $key = null, $use_cache = false, $host = '', $json_decode = true, $showdebug = false){
 
 		if($host == ''){
 
@@ -1783,14 +2034,16 @@ class Update extends CI_Controller {
 		curl_setopt_array($curl, $opt);
 		$response = curl_exec($curl);
 
+
+		// return $response;
+		// die();
+
 		$err = curl_error($curl);
 		curl_close($curl);
 		if ($err) {
-			if($use_cache){
-				return json_decode($this->ci->utils->getCacheRedis($key));
-			}else{
-				return false;
-			}
+			
+			return false;
+			
 		} else {
 
 			if($json_decode == true){

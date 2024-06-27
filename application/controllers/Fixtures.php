@@ -1,12 +1,22 @@
 <?php
 class Fixtures extends CI_Controller {
 	var $season = 9;
+	protected $season_id;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
+	protected $catid;
 	protected $_page = 'fixtures';
 	protected $_cache;
 
+
     public function __construct()    {
 		parent::__construct();
-		header('Content-type: text/html; charset=utf-8');
+		// header('Content-type: text/html; charset=utf-8');
 
 		// $this->load->library('session');
 		// $this->load->library('genarate');
@@ -24,16 +34,19 @@ class Fixtures extends CI_Controller {
  		$this->date_start = $this->config->config['date_start'];
 		$this->datetime_start = $this->config->config['datetime_start'];
 
-		$this->catid = $this->config->config['catid_news'];
+		// $this->catid = $this->config->config['catid_news'];
         
         $this->team_path = 'data/uploads/teamlogo/';
 		$this->stadium_path = 'data/uploads/stadium/';
 		$this->base_path = str_replace('application/controllers', '', __DIR__);
 
-		if($this->input->get('cache') == 'disable'){
-			$this->_cache = false;
-		}else
-			$this->_cache = true;
+		$this->_cache = false;
+		// if($this->input->get('cache') == 'disable'){
+		// 	$this->_cache = false;
+		// }else
+		// 	$this->_cache = true;
+
+		
     }
 
 	public function index(){
@@ -56,30 +69,32 @@ class Fixtures extends CI_Controller {
         $datenext = date("Y-m-d", strtotime("+1 day"));
         $datebetween[] = $datenext.' 23:59:59';
 
-		if($datenow >= '2022-12-15'){
+		// Debug($this->config->config);
+		// die();
+		if($datenow >= '2024-06-14' && $datenow < '2024-06-20'){
 
-			$stage_id = 10561444;
-			$week = 0;
-		}else if($datenow >= '2022-12-13'){
+			$stage_id = 10011027;
+			$week = 1;
+		}else if($datenow > '2024-06-20' && $datenow < '2024-06-23'){
 
-			$stage_id = 10561089;
-			$week = 0;
-		}else if($datenow >= '2022-12-09'){
+			$stage_id = 10011027;
+			$week = 2;
+		}else if($datenow > '2024-06-23' && $datenow < '2024-06-26'){
 
-			$stage_id = 10562591;
-			$week = 0;
-		}else if($datenow >= '2022-12-03'){
-
-			$stage_id = 10561511;
-			$week = 0;
-		}else if($datenow >= '2022-11-29'){
-
-			$stage_id = 10561027;
+			$stage_id = 10011027;
 			$week = 3;
+		}else if($datenow >= '2024-06-26'){
+
+			$stage_id = 10011027;
+			$week = 0;
+		}else if($datenow >= '2024-06-26'){
+
+			$stage_id = 10011027;
+			$week = 0;
 		}else{
 
-			$stage_id = 10561027;
-			$week = 2;
+			$stage_id = 10011027;
+			$week = 0;
 		}
 
 		if($this->input->get('stage')){
@@ -90,12 +105,13 @@ class Fixtures extends CI_Controller {
 			$week = $this->input->get('w');
 		}
 
-		if($stage_id != 10561027) $week = 0;
+		// if($stage_id != 10561027) $week = 0;
 
 		
 		$section = 'index';
 		$cache_key_all = 'page_'.$this->_page.'_'.$section.'-'.$stage_id.'-'.$week;
-		$cache = $this->utils->getCache($cache_key_all);
+		// $cache = $this->utils->getCache($cache_key_all);
+		$cache = null;
 
 		if($cache && $this->_cache){
 
@@ -107,9 +123,13 @@ class Fixtures extends CI_Controller {
 
 			// $sel_date = $this->fixtures_model->sel_date($stage_id);
 			// Debug($sel_date);
+			// $stage_id = 0;
 
 			$obj_list = $this->fixtures_model->get_data(0, 0, $this->tournament_id, null, $stage_id, $week);
 			// $obj_list = $this->fixtures_model->get_data(0, 0, $this->tournament_id, $datebetween);
+			// echo $this->db->last_query();
+			// Debug($obj_list);
+
 
 			if($stage_id == 10561444)
 				$obj_list2 = $this->fixtures_model->get_data(0, 0, $this->tournament_id, null, 10561069);
@@ -135,25 +155,25 @@ class Fixtures extends CI_Controller {
 
 			$breadcrumb[] = 'โปรแกรมบอลโลก';
 
-			$webtitle = 'โปรแกรม'.$tournament_name.' ช่องถ่ายทอดสดฟุตบอลโลก พร้อมลิ้งถ่ายทอดสด';
-			$page_published_time = date('c' , strtotime('2022-10-27'));
+			$webtitle = 'โปรแกรม'.$tournament_name.' ช่องถ่ายทอดสดฟุตบอลยูโร พร้อมลิ้งถ่ายทอดสด';
+			$page_published_time = date('c' , strtotime('2024-06-14'));
 			$page_lastupdated_date = date('c');
 			// $keywords = explode(',', _KEYWORD);
 			$social_block = $this->social_block($webtitle);
 
-			$keywords[] = 'ตารางบอลโลก';
-			$keywords[] = 'โปรแกรมฟุตบอลโลก';
-			$keywords[] = 'โปรแกรมฟุตบอลโลก 2022';
-			$keywords[] = 'ผลบอลโลก';
+			$keywords[] = 'ตารางบอลยูโร';
+			$keywords[] = 'โปรแกรมฟุตบอลยูโร';
+			$keywords[] = 'โปรแกรมฟุตบอลยูโร 2024';
+			$keywords[] = 'ผลบอลยูโร';
 			
 			$meta = array(
 				'title' => $webtitle,
-				'description' => $webtitle.'ฟุตบอลโลก 2022 '._DESCRIPTION,
+				'description' => $webtitle.'ฟุตบอลยูโร 2024 '._DESCRIPTION,
 				'keywords' => $keywords,
 				'page_image' => _COVER_WC2022,
 				"page_published_time" => $page_published_time,
-				"Author" => "Ballnaja",
-				"Copyright" => "Ballnaja"
+				"Author" => "S",
+				"Copyright" => "S"
 			);
 
 			$asset_css[] = 'jquery.fancybox.css';
@@ -164,7 +184,7 @@ class Fixtures extends CI_Controller {
 				"webtitle" => $webtitle,
 				"breadcrumb" => $breadcrumb,
 				"menu" => $display_menu,
-				"head" => 'โปรแกรมบอลโลก ผลบอลโลก',
+				"head" => 'โปรแกรมฟุตบอลยูโร ผลบอลยูโร',
 				"sel_date" => $sel_date,
 				"html" => $html,
 				"stage_id" => $stage_id,
@@ -176,11 +196,11 @@ class Fixtures extends CI_Controller {
 				"breadcrumb" => $breadcrumb,
 				"content_view" => 'fixtures/list'
 			);
-			// $this->load->view('template-wc',$data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro',$data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
-			$this->utils->setCacheRedis($cache_key_all, $html);
+			// $this->utils->setCacheRedis($cache_key_all, $html);
 			echo $html;
 			$this->db->close();
 		}
@@ -341,7 +361,7 @@ class Fixtures extends CI_Controller {
 				$link_teamaway = ($awayteam_id > 0) ? base_url('team/detail/'.$awayteam_id): '#';
 
 				$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-				$view_match = base_url('match/detail/'.$program_id.'/'.$fix_id);
+				$view_match = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 				if($time_score != 'FT'){
 
@@ -417,7 +437,7 @@ class Fixtures extends CI_Controller {
 		$this->load->model('season_model');
 		$this->load->model('match_model');
 		$this->load->model('program_model');
-		$this->load->model('price_model');
+		// $this->load->model('price_model');
 		$this->load->model('tournament_model');
 
 		// $ListSelect = $this->genarate->user_menu($this->session->userdata('admin_type'));

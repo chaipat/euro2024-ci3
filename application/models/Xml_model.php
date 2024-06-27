@@ -1,7 +1,7 @@
 <?php
 class Xml_model extends CI_Model {
-	var $prefix;
 
+	protected $prefix;
 	public function __construct(){
 		parent::__construct();
 
@@ -286,14 +286,20 @@ class Xml_model extends CI_Model {
 
 	public function update($table, $field = 'id', &$data = array(), $showdebug = 1){
 
-		$this->db->where($field, intval($data[$field]));
-		unset($data[$field]);
-		$this->db->update($table, $data);
+		if(isset($data[$field])){
+			$this->db->where($field, intval($data[$field]));
+			unset($data[$field]);
+			$this->db->update($table, $data);
 
-		if($showdebug == 1) 
-			Debug($this->db->last_query());
+			if($showdebug == 1) 
+				Debug($this->db->last_query());		
+			
+			return true;
+		}else
+			return false;
 
-		return true;
+
+		
 	}
 
 	public function ChkActive($table, $field ='team_id', &$data = array()){
@@ -333,7 +339,7 @@ class Xml_model extends CI_Model {
 		return $res;
 	}
 
-	public function create_table($table_name = 'team', $data){
+	public function create_table($table_name = 'team', $data = array()){
 
 		//echo 'create table '.$table_name.'';
 		//Debug($data);

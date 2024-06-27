@@ -101,7 +101,8 @@ defined('_BD')           OR define('_BD', 'https://www.blockdit.com/pages/631720
 defined('_NO_PLAYER')           OR define('_NO_PLAYER', 'assets/images/no_img.png');
 defined('_NO_IMAGES')           OR define('_NO_IMAGES', 'assets/images/No_image_available.svg');
 
-defined('_HOST_BACKLINK')       OR define('_HOST_BACKLINK', 'https://service-campaign-admin-share.zipzoft.online/');
+defined('_HOST_BACKLINK')       OR define('_HOST_BACKLINK', '');
+defined('_BANNER_BILLBOARD')       OR define('_BANNER_BILLBOARD', '2024-970x250_64283598.png');
 
 //****** Event *********/
 

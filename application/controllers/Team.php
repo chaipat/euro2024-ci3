@@ -2,6 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Team extends CI_Controller {
+	protected $season;
+	protected $season_id;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
+	protected $profile_path;
 	protected $_page = 'team';
 	protected $_cache;
 
@@ -24,7 +34,7 @@ class Team extends CI_Controller {
  		$this->date_start = $this->config->config['date_start'];
 		$this->datetime_start = $this->config->config['datetime_start'];
 
-		$this->catid = $this->config->config['catid_news'];
+		// $this->catid = $this->config->config['catid_news'];
 		// $this->catid = $this->config->config['catid_other'];
 
 		$this->profile_path = 'data/uploads/player/';
@@ -32,10 +42,7 @@ class Team extends CI_Controller {
 		$this->stadium_path = 'data/uploads/stadium/';
 		$this->base_path = str_replace('application/controllers', '', __DIR__);
 
-		if($this->input->get('cache') == 'disable'){
-			$this->_cache = false;
-		}else
-			$this->_cache = true;
+		$this->_cache = false;
     }
 
 	public function index()
@@ -139,8 +146,8 @@ class Team extends CI_Controller {
 				"page_lastupdated_date" => $page_lastupdated_date,
 				"content_view" => 'team/list'
 			);
-			// $this->load->view('template-wc', $data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro', $data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key_all, $html);
@@ -156,6 +163,7 @@ class Team extends CI_Controller {
 		$this->load->view('html/team-detail');
 	}
 
+	//Update Player & Coach
 	public function edit($team_id = 0)
 	{
 		$get_teamlist = $this->team_model->get_data($this->tournament_id, $team_id);
@@ -504,7 +512,7 @@ class Team extends CI_Controller {
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
 
 			$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			$html .= '<div>
 				<span>
@@ -595,7 +603,7 @@ class Team extends CI_Controller {
 			$link_teamhome = base_url('team/detail/'.$hteam_id);
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
 			$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			$html .= '<div> 
 				<span><a href="'.$link_teamhome.'" target="_blank">'.$home_team.' '.$logo_team1.'</a> 
@@ -646,7 +654,7 @@ class Team extends CI_Controller {
 
 		$section = 'detail';
 		$cache_key = 'page_'.$this->_page.'_'.$section.'-team-'.$team_id;
-		$cache = $this->utils->getCache($cache_key);
+		$cache = null;
 		
 		if($cache && $this->_cache){
 
@@ -659,6 +667,7 @@ class Team extends CI_Controller {
 			$get_teamlist = $this->team_model->get_data($tournament_id, $team_id);
 			// Debug($this->db->last_query());
 			// Debug($get_teamlist);
+			// die();
 			if(empty($get_teamlist)){
 
 				redirect('/');
@@ -697,6 +706,7 @@ class Team extends CI_Controller {
 			$display_program = $this->display_program($fixtures_list);
 			$display_player = $this->display_player($get_teamlist, $get_player);
 
+			// echo 'file:'.$this->base_path.$this->team_path.$team_id.'.txt';
 			if(file_exists($this->base_path.$this->team_path.$team_id.'.txt')) {
 				$file = fopen($this->base_path.$this->team_path.$team_id.'.txt', 'r');
 				while(! feof($file)) {
@@ -770,8 +780,8 @@ class Team extends CI_Controller {
 				"page_lastupdated_date" => $page_lastupdated_date,
 				"content_view" => 'team/detail'
 			);
-			// $this->load->view('template-wc', $data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro', $data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key, $html);
@@ -1035,7 +1045,7 @@ class Team extends CI_Controller {
 
 				$link_teamhome = base_url('team/detail/'.$hometeam_id);
 				$link_teamaway = base_url('team/detail/'.$awayteam_id);
-				$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+				$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 				$link_analyzeview = base_url('analyze/view/'.$program_id.'/'.$fix_id);
 
 				$html .= '
@@ -1376,7 +1386,7 @@ class Team extends CI_Controller {
 			"page_lastupdated_date" => $page_lastupdated_date,
 			"content_view" => 'team/detail'
         );
-        $this->load->view('template-wc', $data);
+        $this->load->view('template-euro', $data);
 		
 	}
 

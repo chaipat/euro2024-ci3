@@ -1,6 +1,7 @@
 <?php
 class Program_analy_model extends CI_Model {
 
+	protected $prefix;
 	public function __construct(){
 		parent::__construct();
 
@@ -51,7 +52,7 @@ class Program_analy_model extends CI_Model {
 		return $query->result_object();
 	}
 
-	function store($id = 0, $data){
+	function store($id, $data){
 
 		if($id > 0){
 			$this->db->where('program_id', $id);

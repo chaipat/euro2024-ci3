@@ -1,24 +1,24 @@
 <div class="warpper bg-blue billboard">
-	<a href="https://www.ballnaja.com/" target="_blank"><img src="<?php echo base_url() ?>assets/images/banner-wc2022.webp" alt="บอลนะจ๊ะ" /></a>
+	<img src="./assets/images/banner/<?php echo _BANNER_BILLBOARD?>" alt="ยูโร 2024" />
 </div>
 <section class="warpper bg-white score-box fixtures">
 	<div class="headline">
 		<h1><?php echo $head ?></h1>
 		<div class="sharesocial">
 			<!-- <span> View <strong>120k</strong>  Share <strong>53k</strong></span> -->
-			<div><?php echo $social_block?></div>
+			<div><?php //echo $social_block?></div>
 		</div>
 	</div>
 	<div class="container-main program-result">
 		<div class="menu-prore">
-			<a href="<?php echo base_url('fixtures').'?stage=10561027&w=1' ?>" <?php if($stage_id == 10561027 && $week == 1) echo 'class="proactive"'; ?> data-value="10561027">รอบแบ่งกลุ่มนัด 1</a>
-			<a href="<?php echo base_url('fixtures').'?stage=10561027&w=2' ?>" <?php if($stage_id == 10561027 && $week == 2) echo 'class="proactive"'; ?> data-value="10561027">รอบแบ่งกลุ่มนัด 2</a>
-			<a href="<?php echo base_url('fixtures').'?stage=10561027&w=3' ?>" <?php if($stage_id == 10561027 && $week == 3) echo 'class="proactive"'; ?> data-value="10561027">รอบแบ่งกลุ่มนัด 3</a>
-			<a href="<?php echo base_url('fixtures').'?stage=10561511' ?>" <?php if($stage_id == 10561511) echo 'class="proactive"'; ?> data-value="10561511">รอบ 16 ทีมสุดท้าย</a>
-			<a href="<?php echo base_url('fixtures').'?stage=10562591' ?>" <?php if($stage_id == 10562591) echo 'class="proactive"'; ?> data-value="10562591">รอบ 8 ทีมสุดท้าย</a>
-			<a href="<?php echo base_url('fixtures').'?stage=10561089' ?>" <?php if($stage_id == 10561089) echo 'class="proactive"'; ?> data-value="10561089">รอบรองชนะเลิศ</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10011027&w=1' ?>" <?php if($stage_id == 10011027 && $week == 1) echo 'class="proactive"'; ?> data-value="10561027">รอบแบ่งกลุ่มนัด 1</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10011027&w=2' ?>" <?php if($stage_id == 10011027 && $week == 2) echo 'class="proactive"'; ?> data-value="10561027">รอบแบ่งกลุ่มนัด 2</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10011027&w=3' ?>" <?php if($stage_id == 10011027 && $week == 3) echo 'class="proactive"'; ?> data-value="10561027">รอบแบ่งกลุ่มนัด 3</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10011511' ?>" <?php if($stage_id == 10011511) echo 'class="proactive"'; ?> data-value="10561511">รอบ 16 ทีมสุดท้าย</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10012591' ?>" <?php if($stage_id == 10012591) echo 'class="proactive"'; ?> data-value="10562591">รอบ 8 ทีมสุดท้าย</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10011089' ?>" <?php if($stage_id == 10011089) echo 'class="proactive"'; ?> data-value="10561089">รอบรองชนะเลิศ</a>
 			<!-- <a href="<?php echo base_url('fixtures').'?stage=10561069' ?>" <?php if($stage_id == 10561069) echo 'class="proactive"'; ?> data-value="10561069">รอบชิงอันดับ 3</a> -->
-			<a href="<?php echo base_url('fixtures').'?stage=10561444' ?>" <?php if($stage_id == 10561444) echo 'class="proactive"'; ?> data-value="10561444">รอบชิงชนะเลิศ</a>
+			<a href="<?php echo base_url('fixtures').'?stage=10011444' ?>" <?php if($stage_id == 10011444) echo 'class="proactive"'; ?> data-value="10561444">รอบชิงชนะเลิศ</a>
 		</div>
 		<!-- <div class="menu-subprore"> -->
 			<?php

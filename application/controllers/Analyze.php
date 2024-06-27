@@ -1,6 +1,14 @@
 <?php
 class Analyze extends CI_Controller {
-	private $season_id;
+	protected $season_id;
+	protected $season;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
 	protected $_page = 'analyze';
 	protected $_cache;
 
@@ -19,7 +27,7 @@ class Analyze extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->helper('common');
 		
-		$this->season_id = '2022';
+		$this->season_id = '2024';
 
 		$this->tournament_id = $this->config->config['tournament_id'];
 		$this->tournament = $this->config->config['tournament'];
@@ -31,10 +39,7 @@ class Analyze extends CI_Controller {
 		$this->stadium_path = 'data/uploads/stadium/';
 		$this->base_path = str_replace('application/controllers', '', __DIR__);
 
-		if($this->input->get('cache') == 'disable'){
-			$this->_cache = false;
-		}else
-			$this->_cache = true;
+		$this->_cache = false;
     }
 
 	public function index(){
@@ -52,7 +57,7 @@ class Analyze extends CI_Controller {
 
 		$section = 'index';
 		$cache_key_all = 'page_'.$this->_page.'_'.$section;
-		$cache = $this->utils->getCache($cache_key_all);
+		$cache = null;
 
 		// echo $cache_key_all."<hr>";
 		// echo "(".$cache." && ".$this->_cache.")";
@@ -170,8 +175,8 @@ class Analyze extends CI_Controller {
 				"breadcrumb" => $breadcrumb,
 				"content_view" => 'analyze/list'
 			);
-			// $this->load->view('template-wc',$data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro',$data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key_all, $html);
@@ -486,8 +491,8 @@ class Analyze extends CI_Controller {
 				"page_lastupdated_date" => $page_lastupdated_date,
 				"content_view" => 'analyze/detail'
 			);
-			// $this->load->view('template-wc', $data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro', $data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key, $html);
@@ -524,7 +529,8 @@ class Analyze extends CI_Controller {
 		$stadium_name = ($fixtures_list->stadium_name_th != '') ? $fixtures_list->stadium_name_th : $fixtures_list->stadium_name;
 
 		$channel_name = $fixtures_list->channel_name;
-		$group_name = str_replace('Group', 'กลุ่ม', $fixtures_list->group_name);
+
+		$group_name = (isset($fixtures_list->group_name)) ? str_replace('Group', 'กลุ่ม', $fixtures_list->group_name) : '';
 		$group_id = $fixtures_list->group_id;
 		
 		$hometeam_point = $fixtures_list->hometeam_point;
@@ -595,7 +601,7 @@ class Analyze extends CI_Controller {
 		$team2 = base_url('team/detail/'.$awayteam_id);
 
 		$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-		$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+		$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 		$html = '<div class="match-list consimatch">
 			<div>
@@ -1449,7 +1455,7 @@ class Analyze extends CI_Controller {
 			$link_teamhome = base_url('team/detail/'.$hteam_id);
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
 			$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			$html .= '<div>
 				<span>
@@ -1550,7 +1556,7 @@ class Analyze extends CI_Controller {
 			$link_teamhome = base_url('team/detail/'.$hteam_id);
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
 			$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			$html .= '<div> 
 				<span><a href="'.$link_teamhome.'" target="_blank">'.$home_team.' '.$logo_team1.'</a> 

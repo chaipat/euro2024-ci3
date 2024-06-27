@@ -252,6 +252,22 @@ class Fixtures_model extends CI_Model {
 		}
 	}
 
+	function store_fixid($id, $data){
+
+		if($id > 0){
+
+			$this->db->where('fix_id', $id);
+			$this->db->update($this->prefix.'_program', $data);
+			
+			return true;
+
+		}else{
+			$insert = $this->db->insert('_program', $data);
+			//Debug($this->db->last_query());
+			return $insert;
+		}
+	}
+
 	//***********Program Ananly
 	function get_program_analy($program_id){
 

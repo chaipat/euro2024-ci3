@@ -105,7 +105,7 @@ class News extends CI_Controller {
 			"page_lastupdated_date" => $page_lastupdated_date,
 			"content_view" => 'news/list'
         );
-        $this->load->view('template-wc', $data);
+        $this->load->view('template-euro', $data);
 		// $this->load->view('home/index');
 	}
 
@@ -676,7 +676,7 @@ class News extends CI_Controller {
 			"page_lastupdated_date" => $page_lastupdated_date,
 			"content_view" => 'news/detail'
         );
-        $this->load->view('template-wc', $data);
+        $this->load->view('template-euro', $data);
 	}
 
 	public function widgets_program($fixtures_list)

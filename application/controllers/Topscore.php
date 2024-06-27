@@ -1,6 +1,19 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Topscore extends CI_Controller {
-	private $season_id;
+
+	protected $season_id;
+	protected $season;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	
+	protected $base_path;
+	protected $profile_path;
+	protected $team_path;
+	protected $stadium_path;
 	protected $_page = 'topscore';
 	protected $_cache;
 
@@ -166,8 +179,8 @@ class Topscore extends CI_Controller {
 				"breadcrumb" => $breadcrumb,
 				"content_view" => 'topscore/list'
 			);
-			// $this->load->view('template-wc',$data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro',$data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key_all, $html);

@@ -81,8 +81,8 @@
     echo css_asset('bootstrap.min.css');
     echo css_asset('reset.min.css');
     // echo css_asset('main.css?v=123');
-    echo css_asset('main.css?v=1');
-    echo css_asset('jquery.mobile-menu.css');
+    echo css_asset('main.css?v=7');
+    echo css_asset('jquery.mobile-menu.css?v=3');
     echo css_asset('flexslider.css?v=4');
     // echo css_asset('jquery.fancybox.css');
     echo css_asset('sweetalert.css?v=2.1.2.0');
@@ -175,7 +175,7 @@ $this->load->view('gtm_body');
 
   <div class="menumobile"> 
   <div>
-  <a href="<?php echo base_url() ?>"><img src="<?php echo base_url('assets/images/logo-new-wc2022.webp') ?>" alt="ฟุตบอลโลก 2022 บอลนะจ๊ะ.com"/></a>
+  <a href="<?php echo base_url() ?>"><img src="<?php echo base_url('assets/images/logo/euro2024-4.jpeg') ?>" alt="ยูโร 2024"/></a>
   <nav class="mm-toggle"><span></span><span></span><span></span></nav>
   <a href="#" id="toggle" class="hidden">search</a>
   </div>
@@ -186,7 +186,7 @@ $this->load->view('gtm_body');
 
   <div class="warpper-head">
     <header class="menuhead">
-      <a href="<?php echo base_url() ?>"><img src="<?php echo base_url('assets/images/logo-new-wc2022.webp') ?>" alt="ฟุตบอลโลก 2022 บอลนะจ๊ะ.com"/></a>
+      <a href="<?php echo base_url() ?>"><img src="<?php echo base_url('assets/images/logo/euro2024-4.jpeg') ?>" alt="ยูโร 2024"/></a>
       <nav>
         <a href="<?php echo base_url() ?>" <?php echo ($path_info[0] == '/') ? "class=\"mactive\"" : ""; ?>>หน้าแรก</a>
         <a href="<?php echo base_url('news') ?>" <?php echo ($path_info[0] == '/news') ? "class=\"mactive\"" : ""; ?>>ข่าว</a>
@@ -203,7 +203,11 @@ $this->load->view('gtm_body');
           <input type="text" name="textfield" id="search">
           <input type="submit" name="submit" id="submit">
         </form>
-        <div class="sociallink"> <a href="<?php echo _FB ?>" rel="nofollow" target="_blank">facebook</a> <a href="<?php echo _TW ?>" rel="nofollow" target="_blank">twitter</a> <a href="<?php echo _YT ?>" rel="nofollow" target="_blank">youtube</a> </div>
+        <div class="sociallink"> <!-- target="_blank" -->
+            <a href="#<?php echo _FB ?>" rel="nofollow" >facebook</a> 
+            <a href="#<?php echo _TW ?>" rel="nofollow" >twitter</a> 
+            <a href="#<?php echo _YT ?>" rel="nofollow" >youtube</a> 
+        </div>
       </div>
     </header>
   </div>
@@ -225,7 +229,7 @@ $this->load->view('gtm_body');
 <footer class="footersection">
   <div>
     <input type="hidden" name="ipv4" id="ipv4">
-    <a href="<?php echo base_url() ?>"><img src="<?php echo base_url('assets/images/logo-new-wc2022.webp') ?>" alt="ฟุตบอลโลก 2022 บอลนะจ๊ะ.com"></a>
+    <a href="<?php echo base_url() ?>"><img src="<?php echo base_url('assets/images/logo/euro2024-4.jpeg') ?>" alt="ยูโร 2024"/></a>
   <ul>
   <li>
     <div>
@@ -251,13 +255,13 @@ $this->load->view('gtm_body');
     </div>
   </li>
   <li>
-    <a href="<?php echo _FB ?>" rel="nofollow" target="_blank">facebook</a>
-    <a href="<?php echo _TW ?>" rel="nofollow" target="_blank">twitter</a>
-    <a href="<?php echo _YT ?>" rel="nofollow" target="_blank">youtube</a>
+    <a href="#<?php echo _FB ?>" rel="nofollow" >facebook</a> <!-- target="_blank" -->
+    <a href="#<?php echo _TW ?>" rel="nofollow" >twitter</a>
+    <a href="#<?php echo _YT ?>" rel="nofollow" >youtube</a>
   </li>
   </ul>
   </div>
-  <div>&copy; Copyright 2022 all Rights Reserved <a href="https://www.ballnaja.com" target="_blank">www.ballnaja.com</a></div>
+  <div>&copy; Copyright 2022 all Rights Reserved </div>
   </footer>
 </div>
 
@@ -384,8 +388,8 @@ $(window).scroll(function(){
 </script>
 <?php
 $this->load->view('sweetalert');
-$this->load->view('getip');
-$this->load->view('backlink');
+// $this->load->view('getip');
+// $this->load->view('backlink');
 ?>
 <script type="text/javascript">
 <?php 

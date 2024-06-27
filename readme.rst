@@ -1,12 +1,10 @@
 ###################
-Worldcup 2022
+Euro 2024
 ###################
 
-เว็ปไซด์นี้จัดทำเพื่อการแสดงข้อมูลฟุตบอลโลก 2022 เท่านั้น
+เว็ปไซด์นี้จัดทำเพื่อการแสดงข้อมูลยูโร 2024 เท่านั้น
 
--  `ฟุตบอลโลก 2022 <https://worldcup2022.ballnaja.com/>`_
--  `worldcup2022.ballnaja.com <https://worldcup2022.ballnaja.com/>`_
--  `worldcup2022-dev.ballnaja.com <https://worldcup2022-dev.ballnaja.com/>`_
+-  `ยูโร 2024 <https://euro2024/>`_
 
 **************************
 Changelog and New Features
@@ -14,15 +12,11 @@ Changelog and New Features
 
 List of all changes.
 
--  Oct 27, 2022 : First Commit
--  Oct 31, 2022 : Add program
-  
-
 *******************
 Server Requirements
 *******************
 
-PHP version 7 or newer is recommended.
+PHP version 8 or newer is recommended.
 Docker 4
 
 ************
@@ -30,17 +24,29 @@ Installation
 ************
 
 
-
 *********
 Resources
 *********
 
--  
-
 
 ***************
-Acknowledgement
+JOB
 ***************
 
-The ballnaja team would like to thank CodeIgniter, all the
-contributors project and you..
+Update fixtures_results
+http://localhost/euro2024-ci3/xml/import_fixtures_results/debug/euro
+
+Update program
+http://localhost/euro2024-ci3/update/getmatch_tournament
+
+Update program & results (XML to program)
+http://localhost/euro2024-ci3/fixtures/import_to_program
+
+Update Team name
+http://localhost/euro2024-ci3/update/team
+
+
+
+
+
+

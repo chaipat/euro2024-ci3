@@ -1,6 +1,15 @@
 <?php
 class Standing extends CI_Controller {
-	private $season_id;
+
+	protected $season_id;
+	protected $season;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
 	protected $_page = 'standing';
 	protected $_cache;
 
@@ -18,7 +27,7 @@ class Standing extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->helper('common');
 		
-		$this->season_id = '2022';
+		$this->season_id = '2024';
 
 		$this->tournament_id = $this->config->config['tournament_id'];
 		$this->tournament = $this->config->config['tournament'];
@@ -30,10 +39,7 @@ class Standing extends CI_Controller {
 		$this->stadium_path = 'data/uploads/stadium/';
 		$this->base_path = str_replace('application/controllers', '', __DIR__);
 
-		if($this->input->get('cache') == 'disable'){
-			$this->_cache = false;
-		}else
-			$this->_cache = true;
+		$this->_cache = false;
     }
 
 	public function index(){
@@ -129,15 +135,15 @@ class Standing extends CI_Controller {
 			
 			$breadcrumb[] = 'ตารางคะแนน';
 
-			$webtitle = 'ตารางคะแนนบอลโลก 2022 อับเดตล่าสุด';
+			$webtitle = 'ตารางคะแนนฟุตบอลยูโร 2024 อับเดตล่าสุด';
 			$page_published_time = date('c' , strtotime('2022-10-27'));
 			$page_lastupdated_date = date('c');
 			// $keywords = explode(',', _KEYWORD);
 			$social_block = $this->social_block($webtitle);
 
-			$keywords[] = 'ตารางคะแนนบอลโลก 2022';
+			$keywords[] = 'ตารางคะแนนฟุตบอลยูโร 2024';
 			$keywords[] = 'ตารางคะแนน';
-			$keywords[] = 'ตารางฟุตบอลโลก';
+			$keywords[] = 'ตารางบอลยูโร';
 			$keywords[] = $tournament_name;
 			
 			$meta = array(
@@ -158,11 +164,11 @@ class Standing extends CI_Controller {
 				"webtitle" => $webtitle,
 				"breadcrumb" => $breadcrumb,
 				"menu" => $display_menu,
-				"head" => 'ตารางคะแนนบอลโลก',
+				"head" => 'ตารางคะแนนฟุตบอลยูโร 2024',
 				"html" => $html,
-				"social_block" => $social_block,
-				"widgets_program" => $widgets_program,
-				"widgets_result" => $widgets_result,
+				"social_block" => null,
+				"widgets_program" => null,
+				"widgets_result" => null,
 				"css" => $asset_css,
 				"js" => $asset_js,
 				"page_lastupdated_date" => $page_lastupdated_date,
@@ -170,7 +176,7 @@ class Standing extends CI_Controller {
 				"content_view" => 'standing/view'
 			);
 			// $this->load->view('template-wc',$data);
-			$html = $this->load->view('template-wc', $data, true);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key_all, $html);
@@ -313,6 +319,7 @@ class Standing extends CI_Controller {
 	{
 
 		$tmp = $html = '';
+		$logo_team1 = $logo_team2 = null;
 		// Debug($fixtures_list);
 		// die();
 		// $url = base_url(uri_string()); 
@@ -376,7 +383,7 @@ class Standing extends CI_Controller {
 				$html .= '<span>'.$program_today.'</span>';
 				$tmp = $sel_date;
 			}
-
+			
 			if(file_exists($this->base_path.$this->team_path.$hteam_id.'.txt')) {
 
 				$file = fopen($this->base_path.$this->team_path.$hteam_id.'.txt', 'r');
@@ -407,7 +414,7 @@ class Standing extends CI_Controller {
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
 
 			$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			$html .= '<div>
 				<span>
@@ -425,6 +432,7 @@ class Standing extends CI_Controller {
 	{
 
 		$tmp = $html = '';
+		$logo_team1 = $logo_team2 = null;
 		// Debug($result_list);
 		// die();
 		// $url = base_url(uri_string()); 
@@ -520,7 +528,7 @@ class Standing extends CI_Controller {
 			$link_teamhome = base_url('team/detail/'.$hteam_id);
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
 			$view_analy = base_url('analyze/view/'.$program_id.'/'.$fix_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			$html .= '<div> 
 				<span><a href="'.$link_teamhome.'" target="_blank">'.$home_team.' '.$logo_team1.'</a> 

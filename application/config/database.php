@@ -70,6 +70,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
+
 $query_builder = TRUE;
 
 if($_SERVER['HTTP_HOST'] == 'localhost')
@@ -82,7 +83,7 @@ $db['default'] = array(
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'worldcup2022db',
+	'database' => 'euro2024db',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => 'ba',
 	'pconnect' => FALSE,
@@ -101,8 +102,8 @@ $db['default'] = array(
 
 $db['production'] = array(
 	'dsn'	=> '',
-	'hostname' => 'db-mysql-sgp1-12308-do-user-7497661-0.a.db.ondigitalocean.com:25060',
-	'username' => 'euro2024db',
+	'hostname' => '',
+	'username' => 'root',
 	'password' => '',
 	'database' => 'euro2024db',
 	'dbdriver' => 'mysqli',
@@ -122,24 +123,3 @@ $db['production'] = array(
 );
 
 
-$db['development'] = array(
-	'dsn'	=> '',
-	'hostname' => 'db-mysql-sgp1-12308-do-user-7497661-0.a.db.ondigitalocean.com:25060',
-	'username' => 'worldcup',
-	'password' => 'worldcup2022*',
-	'database' => 'ballnaja_worldcup',
-	'dbdriver' => 'mysqli',
-	'dbprefix' => 'ba',
-	'pconnect' => FALSE,
-	'db_debug' => FALSE,
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	// 'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
-);

@@ -14,7 +14,7 @@
     </div>
 
     <aside class="sidebar">
-      <?php $this->load->view('widgets-rectangle1'); ?>
+      <?php //$this->load->view('widgets-rectangle1'); ?>
     </aside>
 
   </div>

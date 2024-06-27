@@ -120,6 +120,26 @@
 ?>
 <script type="text/javascript">
 
+function update_team_name(team_id, res){
+  
+  var url = '<?php echo base_url('update/update_team') ?>/' + team_id;
+  var team_name = $('#team_name' + team_id).val();
+
+  console.log('Updat team:' + team_name + ' ' + team_id);
+
+  $.ajax({
+      url:url,
+      type:"POST",
+      data:{
+        team_id: team_id, team_name: team_name
+      },
+      success:function(response) {
+        
+        $('#' + res).html('<span class="green">' + response + '</span>');
+      }
+  });
+}
+
 function update_profile_name(profile_id, team_id, res){
   
   var url = '<?php echo base_url('update/profile_name') ?>/' + profile_id;

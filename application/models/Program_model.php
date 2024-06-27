@@ -1,6 +1,7 @@
 <?php
 class Program_model extends CI_Model {
  
+	protected $prefix;
     public function __construct(){
 		parent::__construct();
         

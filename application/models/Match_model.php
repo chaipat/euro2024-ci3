@@ -1,6 +1,7 @@
 <?php
 class Match_model extends CI_Model {
  
+	protected $prefix;
     public function __construct(){
 		parent::__construct();
         
@@ -190,13 +191,35 @@ class Match_model extends CI_Model {
 		return $res;
     }
 
+	public function getmatch_xml($match_id = 0, $table = "_xml_match"){
+    		
+    	$this->db->select('*');
+    	$this->db->from($table);
+    	$this->db->where('match_id', intval($match_id));
+    	$query = $this->db->get();
+
+		$res = $query->result_object();
+		return $res;
+    }
+
+	public function getmatch_tournament($tournament_id = 0, $table = "_xml_match"){
+    		
+    	$this->db->select('*');
+    	$this->db->from($table);
+    	$this->db->where('tournament_id', intval($tournament_id));
+    	$query = $this->db->get();
+
+		$res = $query->result_object();
+		return $res;
+    }
+
 	public function save_import($ref_id =0,&$data = array()){
 		//$this->db->delete('_match_temp', array('ref_id' => $ref_id));
 		$insert = $this->db->insert_batch('_match_temp', $data);
 		return $insert;
 	}
 
-    function store($ref_id = 0, $data, $showdebug = 0){
+    function store($ref_id, $data, $showdebug = 0){
 
 		if($ref_id == 0){
 

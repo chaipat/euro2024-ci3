@@ -23,7 +23,7 @@
     ?>
 
     <aside class="sidebar">
-      <?php $this->load->view('widgets-rectangle1'); ?>
+      <?php //$this->load->view('widgets-rectangle1'); ?>
     </aside>
 
   </div>
@@ -38,7 +38,7 @@
   </div>
 
   <aside class="sidebar">
-    <?php $this->load->view('widgets-rectangle2'); ?>
+    <?php //$this->load->view('widgets-rectangle2'); ?>
   </aside>
 
 </section>

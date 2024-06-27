@@ -19,6 +19,12 @@ class Dev extends CI_Controller {
 		$this->load->view('dev/grid');
 	}
 
+	public function sport()
+	{
+		// $this->load->librery('session');
+		$this->load->view('html/sport');
+	}
+
 	public function db()
 	{
 		$use_db = '';

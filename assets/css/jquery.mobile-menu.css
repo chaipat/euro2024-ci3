@@ -38,7 +38,7 @@
 #mobile-menu {
   position:fixed;
   top: 0;
-  background: #7f0025;
+  background: #143cdb;
   z-index: 99999;
   -webkit-box-shadow: 0 1px 8px #555;
   -moz-box-shadow: 0 1px 8px #555;
@@ -179,7 +179,7 @@
   /* line 192, C:/wamp/www/rmm/git/css/sass/jquery.mobile-menu.scss */
   .mobile-menu li {
     display: block;
-    border-top: 1px solid #7b4170;
+    border-top: 1px solid #41577b;
     width: 100%;
     float: left;
     margin: 0;
@@ -271,6 +271,6 @@
 
 /* line 264, C:/wamp/www/rmm/git/css/sass/jquery.mobile-menu.scss */
 
-.close-mm{padding:6px !important; background:#400214; border:0 !important; width:100% !important;}
+.close-mm{padding:6px !important; background:#020440; border:0 !important; width:100% !important;}
 .close-mm p{padding:2px 0 0 28px; text-align:right; color:#FFF;}
 .close-mm p strong{display:inline-block; background:#FFF; border-radius:70px; color:#000; line-height:22pt; padding:0 8px; position:relative; top:-2px; font-size:17px;}

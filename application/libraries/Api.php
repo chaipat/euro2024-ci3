@@ -7,7 +7,7 @@ Class Api{
 	public function __construct () {
 
         $this->_ci =& get_instance();
-		$this->_ci->config->load('wc2022');
+		$this->_ci->config->load('euro2024');
 
         $this->_host = base_url();
 		$this->_host_api = $this->_ci->config->item('host_api');

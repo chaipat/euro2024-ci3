@@ -1,10 +1,24 @@
 <?php
-class Match extends CI_Controller {
-	var $season = 9;
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Program extends CI_Controller {
+    protected $season;
+	protected $season_id;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
+	protected $profile_path;
+	protected $catid;
+	protected $_page = 'program';
+	protected $_cache;
 
     public function __construct()    {
 		parent::__construct();
-		header('Content-type: text/html; charset=utf-8');
+		// header('Content-type: text/html; charset=utf-8');
 
 		// $this->load->library('session');
 		// $this->load->library('genarate');
@@ -22,7 +36,7 @@ class Match extends CI_Controller {
  		$this->date_start = $this->config->config['date_start'];
 		$this->datetime_start = $this->config->config['datetime_start'];
 
-		$this->catid = $this->config->config['catid_news'];
+		$this->catid = '';
         
         $this->profile_path = 'data/uploads/player/';
 		$this->team_path = 'data/uploads/teamlogo/';
@@ -109,7 +123,7 @@ class Match extends CI_Controller {
 			"content_view" => 'fixtures/list'
 		);
 		//$this->parser->parse('template',$data);
-        $this->load->view('template-wc',$data);
+        $this->load->view('template-euro',$data);
 	}
 
 	public function display_program($obj_list){
@@ -255,7 +269,7 @@ class Match extends CI_Controller {
 		$obj_list = $data_list = $heading = $datebetween = $date_result = $asset_css = $asset_js = array();
 		$button_stat = $lineup = $bet = $import_statistics = $datekick = $price = $display_menu = $tournament_name = '';
 		$event_pen = $man_of_match = $match_stat = $display_topscore = $display_topassist = $html = '';
-		$postdata = $widgets_result = null;
+		$postdata = $widgets_result = $match_penalties = null;
 
 		$this->load->model('team_model');
 
@@ -282,7 +296,7 @@ class Match extends CI_Controller {
 		// Debug($obj_list);
 
 		$teamhome_list = $this->team_model->get_data($this->tournament_id, $hometeam_id);
-		$home_manager_name = ($teamhome_list[0]->manager_name_th != '') ? $teamhome_list[0]->manager_name_th: $teamhome_list[0]->manager_name;
+		$home_manager_name = (@$teamhome_list[0]->manager_name_th != '') ? @$teamhome_list[0]->manager_name_th: @$teamhome_list[0]->manager_name;
 		// Debug($teamhome_list);
 
 		$teamaway_list = $this->team_model->get_data($this->tournament_id, $awayteam_id);
@@ -294,7 +308,7 @@ class Match extends CI_Controller {
 		// Debug($this->db->last_query());
 		// Debug($match_event);
 
-		$match_penalties = $this->match_model->getmatch_penalties($fix_id);
+		// $match_penalties = $this->match_model->getmatch_penalties($fix_id);
 		// Debug($this->db->last_query());
 		// Debug($match_penalties);
 		// die();
@@ -359,7 +373,7 @@ class Match extends CI_Controller {
             "webtitle" => $webtitle,
             "breadcrumb" => $breadcrumb,
 			"menu" => $display_menu,
-			"head" => 'ผลบอลสดฟุตบอลโลก '.$hometeam_title.' กับ '.$awayteam_title,
+			"head" => 'ผลบอลสดฟุตบอลยูโร '.$hometeam_title.' กับ '.$awayteam_title,
 			"display_matchinfo" => $display_matchinfo,
 			"display_match_event" => $display_match_event,
 			"event_pen" => $event_pen,
@@ -375,7 +389,7 @@ class Match extends CI_Controller {
 			"breadcrumb" => $breadcrumb,
 			"content_view" => 'match/detail'
 		);
-        $this->load->view('template-wc',$data);
+        $this->load->view('template-euro',$data);
 		
 	}
 
@@ -411,7 +425,8 @@ class Match extends CI_Controller {
 				$kickoff_th = $rows->kickoff_th;
 				$ft_result = $rows->ft_result;
 				$et_result = $rows->et_result;
-				$penalty = trim($rows->penalty);
+
+				$penalty = (isset($rows->penalty)) ? trim($rows->penalty) : '';
 
 				$week = $rows->week;
 				$program_status = $rows->program_status;
@@ -552,7 +567,7 @@ class Match extends CI_Controller {
 					<a href="'.$link_teamaway.'" target="_blank" ><span>'.$awayteam_title.'</span> '.$logo_team2.' </a>
 				</span>
 				<span>'.$group_name.'</span>
-				<span>ช่องถ่ายทอดสดฟุตบอลโลก พร้อมลิ้งถ่ายทอดสด</span>
+				<span>ช่องถ่ายทอดสดฟุตบอลยูโร พร้อมลิ้งถ่ายทอดสด</span>
 				'.$channel.'
 				<span>สนาม '.$stadium_name.'</span>
 				<a target="_blank" href="'.$view_analy.'">วิเคราะห์บอล</a>
@@ -605,6 +620,7 @@ class Match extends CI_Controller {
 			}
 			
 			//********** Team *********/
+            $show_team = $team_name;
 			if(file_exists($this->base_path.$this->team_path.$team_id.'.txt')) {
 				$file = fopen($this->base_path.$this->team_path.$team_id.'.txt', 'r');
 				while(! feof($file)) {
@@ -998,8 +1014,10 @@ class Match extends CI_Controller {
 		// Debug($match_lineup);
 		$number = count($match_lineup);
 		// $number = 11;
+        
 		for($l=0;$l<$number;$l++){
-
+            
+            $head_position = '';
 			$data_rows = $match_lineup[$l];
 			// Debug($data_rows);
 
@@ -1009,15 +1027,19 @@ class Match extends CI_Controller {
 			// $number = $data_rows->number;
 			// $name = $data_rows->name;
 			$player_name = ($data_rows->player_name_th != '') ? $data_rows->player_name_th: $data_rows->player_name;
-			$player_position = $data_rows->player_position;
+			$player_position = (isset($data_rows->player_position)) ? ucfirst($data_rows->player_position) : '';
 
-			if(ucfirst($player_position) == 'Goalkeeper'){
+			if($player_name == ''){
+				$player_name = $data_rows->name;
+			}
+
+			if($player_position == 'Goalkeeper'){
 				$head_position = 'ผู้รักษาประตู';
-			}else if(ucfirst($player_position) == 'Defender'){
+			}else if($player_position == 'Defender'){
 				$head_position = 'กองหลัง';
-			}else if(ucfirst($player_position) == 'Midfielder'){
+			}else if($player_position == 'Midfielder'){
 				$head_position = 'กองกลาง';
-			}else if(ucfirst($player_position) == 'Attacker'){
+			}else if($player_position == 'Attacker'){
 				$head_position = 'กองหน้า';
 			}
 
@@ -1102,6 +1124,8 @@ class Match extends CI_Controller {
 		$number = count($match_substitutions);
 		for($l=0;$l<$number;$l++){
 
+            $head_position = '';
+
 			$data_rows = $match_substitutions[$l];
 			// Debug($data_rows);
 
@@ -1115,15 +1139,19 @@ class Match extends CI_Controller {
 			$minute = $data_rows->minute;
 
 			$player_name = ($data_rows->player_name_th != '') ? $data_rows->player_name_th: $data_rows->player_name;
-			$player_position = $data_rows->player_position;
+			$player_position = (isset($data_rows->player_position)) ? ucfirst($data_rows->player_position) : '';
 
-			if(ucfirst($player_position) == 'Goalkeeper'){
+			if($player_name == ''){
+				$player_name = $on_name;
+			}
+
+			if($player_position == 'Goalkeeper'){
 				$head_position = 'ผู้รักษาประตู';
-			}else if(ucfirst($player_position) == 'Defender'){
+			}else if($player_position == 'Defender'){
 				$head_position = 'กองหลัง';
-			}else if(ucfirst($player_position) == 'Midfielder'){
+			}else if($player_position == 'Midfielder'){
 				$head_position = 'กองกลาง';
-			}else if(ucfirst($player_position) == 'Attacker'){
+			}else if($player_position == 'Attacker'){
 				$head_position = 'กองหน้า';
 			}
 
@@ -1315,7 +1343,7 @@ class Match extends CI_Controller {
 		$this->load->model('season_model');
 		$this->load->model('match_model');
 		$this->load->model('program_model');
-		$this->load->model('price_model');
+		// $this->load->model('price_model');
 		$this->load->model('tournament_model');
 
 		// $ListSelect = $this->genarate->user_menu($this->session->userdata('admin_type'));
@@ -1340,6 +1368,8 @@ class Match extends CI_Controller {
         // $obj_list = $this->fixtures_model->get_data(0, 0, $this->tournament_id);
 
         $obj_list = $this->fixtures_model->get_xml($this->tournament_id);
+
+		// echo $webtitle."<hr>";
         // echo $this->db->last_query();
 		// Debug($obj_list);
 		// die();

@@ -2,6 +2,7 @@
 
 class Api_model extends CI_Model {
 
+	protected $prefix;
     function __construct(){
         parent::__construct();
         //$this->load->library('parser');

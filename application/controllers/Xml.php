@@ -4,40 +4,40 @@ ini_set("display_errors", "1");
 
 class Xml extends CI_Controller {
 
-	var $xml_host = 'http://www.goalserve.com/getfeed/c37c46d4313e43a899a3a3d00cbd454b/';
-	var $xml_host2 = 'http://www.goalserve.com/getfeed/ff0aa5cf9aca4b778bef284498fe9907/';
+	protected $season;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
+	protected $hostapi;
+	protected $token;
+	protected $_page = 'xml';
+	protected $_cache;
 
-	/*var $xml_team = 'uploads/XML/team.xml';
-	var $xml_h2h = 'uploads/XML/h2h.xml';
-	var $xml_player = 'uploads/XML/player.xml';
-	var $xml_fixtures_results = 'uploads/XML/fixtures-results.xml';
-	var $xml_live_commentaries = 'uploads/XML/live_commentaries.xml';
-	var $xml_standings = 'uploads/XML/standings.xml';
-	var $xml_topscorers = 'uploads/XML/topscorers.xml';
-	var $xml_odds = 'uploads/XML/odds2.xml';*/
+	protected $xml_host = 'http://www.goalserve.com/getfeed/c37c46d4313e43a899a3a3d00cbd454b/';
+	protected $xml_host2 = 'http://www.goalserve.com/getfeed/ff0aa5cf9aca4b778bef284498fe9907/';
 
-	var $xml_team = 'soccerstats/team/';
-	var $xml_h2h = 'h2h/9249/9002';	//'h2h/9249/9002'
-	var $xml_player = 'soccerstats/player/';
-	var $xml_fixtures_results = 'soccerfixtures/england/PremierLeague';
-	var $xml_live_commentaries_epl = 'commentaries/epl.xml';
+	protected $xml_team = 'soccerstats/team/';
+	protected $xml_h2h = 'h2h/9249/9002';	//'h2h/9249/9002'
+	protected $xml_player = 'soccerstats/player/';
+	protected $xml_fixtures_results = 'soccerfixtures/england/PremierLeague';
+	protected $xml_live_commentaries_epl = 'commentaries/epl.xml';
 
-	var $xml_standings = 'standings/fifa_worldcup.xml';
-	var $xml_topscorers = 'topscorers/worldcup';
-	var $xml_odds = 'getodds/soccer?cat=worldcup';
+	protected $xml_standings = 'standings/euro.xml';
+	protected $xml_topscorers = 'topscorers/euro';
+	protected $xml_odds = 'getodds/soccer?cat=worldcup';
 
-	// var $xml_standings = 'standings/england.xml';
-	// var $xml_topscorers = 'topscorers/england';
-	// var $xml_odds = 'getodds/soccer?cat=england';
-	
 	//News
-	var $xml_news_yesterday = 'soccernew/d-1';	//all yesterday games from all leagues
-	var $xml_news_tomorrow = 'soccernew/d1';	//all tomorrow games from all leagues
-	var $xml_news_lives = 'soccernew/home';		//all livescores from all leagues
-	var $xml_england_shedule = 'soccernew/england_shedule';
-	var $xml_historical = 'soccerhistory/england/PremierLeague-2011-2012';
+	protected $xml_news_yesterday = 'soccernew/d-1';	//all yesterday games from all leagues
+	protected $xml_news_tomorrow = 'soccernew/d1';	//all tomorrow games from all leagues
+	protected $xml_news_lives = 'soccernew/home';		//all livescores from all leagues
+	protected $xml_england_shedule = 'soccernew/england_shedule';
+	protected $xml_historical = 'soccerhistory/england/PremierLeague-2011-2012';
 
-	var $prefix;
+	protected $prefix;
 
     public function __construct()    {
 		parent::__construct();
@@ -61,7 +61,7 @@ class Xml extends CI_Controller {
 		$this->datetime_start = $this->config->config['datetime_start'];
 		$this->prefix = 'ba';
 
-		$this->hostapi = 'https://worldcup2022-dev.ballnaja.com/';
+		$this->hostapi = '';
 		//$this->load->helper('directory');
 		//$this->load->helper('file');
 
@@ -94,12 +94,12 @@ class Xml extends CI_Controller {
 			$get_teamlist = $this->team_model->get_data($this->tournament_id);
 			// Debug($get_teamlist);
 			
-			$list_worldcup[] = anchor(base_url('xml/import_soccernew/json/worldcup?cat=1056'), 'soccernew', array('target' => '_blank', 'title' => 'soccernew'));
-			$list_worldcup[] = anchor(base_url('xml/import_soccernew/json/worldcup_shedule?cat=1056'), 'worldcup_shedule', array('target' => '_blank', 'title' => 'Update worldcup_shedule'));
-			$list_worldcup[] = anchor(base_url('xml/import_standings/debug/fifa_worldcup.xml'), 'standings', array('target' => '_blank', 'title' => 'standings'));
-			$list_worldcup[] = anchor(base_url('xml/import_fixtures_results/json/worldcup'), 'fixtures', array('target' => '_blank', 'title' => 'fixtures'));
+			$list_worldcup[] = anchor(base_url('xml/import_soccernew/json/eurocups?cat=1001'), 'soccernew', array('target' => '_blank', 'title' => 'soccernew'));
+			$list_worldcup[] = anchor(base_url('xml/import_soccernew/json/eurocups_shedule?cat=1001'), 'eurocups_shedule', array('target' => '_blank', 'title' => 'Update eurocups_shedule'));
+			$list_worldcup[] = anchor(base_url('xml/import_standings/debug/euro.xml'), 'standings', array('target' => '_blank', 'title' => 'standings'));
+			$list_worldcup[] = anchor(base_url('xml/import_fixtures_results/json/euro'), 'fixtures', array('target' => '_blank', 'title' => 'fixtures'));
 			$list_worldcup[] = anchor(base_url('xml/import_topscorers/json/topscore'), 'Topscore', array('target' => '_blank', 'title' => 'Topscore'));
-			$list_worldcup[] = anchor(base_url('xml/import_topscorers/json/worldcup_assists'), 'Topassists', array('target' => '_blank', 'title' => 'Topassists'));
+			$list_worldcup[] = anchor(base_url('xml/import_topscorers/json/euro_assists'), 'Topassists', array('target' => '_blank', 'title' => 'Topassists'));
 			$list_worldcup[] = anchor(base_url('xml/import_fixtures_results/debug/odds'), 'odds', array('target' => '_blank', 'title' => 'odds'));
 			$list_worldcup[] = anchor(base_url('xml/import_fixtures_results/debug/history'), 'history', array('target' => '_blank', 'title' => 'history'));
 			$list_worldcup[] = anchor(base_url('xml/import_highlights/json/d-1'), 'highlights', array('target' => '_blank', 'title' => 'highlights'));
@@ -107,7 +107,7 @@ class Xml extends CI_Controller {
 			$data .= '<div class="col-lg-6">
 				<div class="panel panel-danger">
 					<div class="panel-heading">
-						Worldcup 2022
+						Euro 2024
 					</div>
 					<div class="panel-body">
 						<div class="col-lg-12">'.$list_worldcup[0].'</div>
@@ -127,30 +127,30 @@ class Xml extends CI_Controller {
 			unset($list_fixture);
 			unset($list_fixture_debug);
 
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/home?cat=1056'), 'Worldcup', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-1?cat=1056'), 'Worldcup D-1', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-2?cat=1056'), 'Worldcup D-2', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-3?cat=1056'), 'Worldcup D-3', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-4?cat=1056'), 'Worldcup D-4', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-5?cat=1056'), 'Worldcup D-5', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-6?cat=1056'), 'Worldcup D-6', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-7?cat=1056'), 'Worldcup D-7', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture[] = anchor(base_url('xml/import_match_event/query/home?cat=1056'), 'Event Now', array('target' => '_blank', 'title' => 'Event'));
-			$list_fixture[] = anchor(base_url('xml/import_match_event/query/home?cat=1056&sel_date='.$date_1), 'Event D-1', array('target' => '_blank', 'title' => 'Event'));
-			$list_fixture[] = anchor(base_url('xml/import_match_event/query/home?cat=1056&sel_date='.$date_2), 'Event D-2', array('target' => '_blank', 'title' => 'Event'));
-			$list_fixture[] = anchor(base_url('xml/import_fixtures_results/query/worldcup'), 'Update Lineup', array('target' => '_blank', 'title' => 'Lineup'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/home?cat=1001'), 'Euro', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-1?cat=1001'), 'Euro D-1', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-2?cat=1001'), 'Euro D-2', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-3?cat=1001'), 'Euro D-3', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-4?cat=1001'), 'Euro D-4', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-5?cat=1001'), 'Euro D-5', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-6?cat=1001'), 'Euro D-6', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_soccernew/query/d-7?cat=1001'), 'Euro D-7', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture[] = anchor(base_url('xml/import_match_event/query/home?cat=1001'), 'Event Now', array('target' => '_blank', 'title' => 'Event'));
+			$list_fixture[] = anchor(base_url('xml/import_match_event/query/home?cat=1001&sel_date='.$date_1), 'Event D-1', array('target' => '_blank', 'title' => 'Event'));
+			$list_fixture[] = anchor(base_url('xml/import_match_event/query/home?cat=1001&sel_date='.$date_2), 'Event D-2', array('target' => '_blank', 'title' => 'Event'));
+			$list_fixture[] = anchor(base_url('xml/import_fixtures_results/query/euro'), 'Update Lineup', array('target' => '_blank', 'title' => 'Lineup'));
 
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d1?cat=1056'), 'Worldcup D+1', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d2?cat=1056'), 'Worldcup D+2', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d3?cat=1056'), 'Worldcup D+3', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d4?cat=1056'), 'Worldcup D+4', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d5?cat=1056'), 'Worldcup D+5', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d6?cat=1056'), 'Worldcup D+6', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d7?cat=1056'), 'Worldcup D+7', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_standings/debug/fifa_worldcup.xml?query=1'), 'Standings', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_topscorers/query/worldcup'), 'Topscorers', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_topassits/query/worldcup_assists'), 'Topassits', array('target' => '_blank', 'title' => 'query'));
-			$list_fixture_debug[] = anchor(base_url('xml/import_topcards/query/worldcup_cards'), 'Topcards', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d1?cat=1001'), 'Euro D+1', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d2?cat=1001'), 'Euro D+2', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d3?cat=1001'), 'Euro D+3', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d4?cat=1001'), 'Euro D+4', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d5?cat=1001'), 'Euro D+5', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d6?cat=1001'), 'Euro D+6', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_soccernew/query/d7?cat=1001'), 'Euro D+7', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_standings/query/euro.xml'), 'Standings', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_topscorers/query/euro'), 'Topscorers', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_topassits/query/euro_assists'), 'Topassits', array('target' => '_blank', 'title' => 'query'));
+			$list_fixture_debug[] = anchor(base_url('xml/import_topcards/query/euro_cards'), 'Topcards', array('target' => '_blank', 'title' => 'query'));
 			$list_fixture_debug[] = anchor(base_url('xml/import_highlights/query/d-1'), 'Highlights', array('target' => '_blank', 'title' => 'Highlights'));
 
 			$data .= '<div class="col-lg-6">
@@ -548,7 +548,7 @@ class Xml extends CI_Controller {
 				if($key == 'venue_image' || $key == 'image'){
 
 					$item_data[$key] = $val;
-					$path = ($key == 'venue_image') ? 'uploads/stadium/' : 'uploads/teamlogo/';
+					$path = ($key == 'venue_image') ? 'uploads/stadium' : 'uploads/teamlogo/';
 					$img = $this->load_base64img($val);
 					//if($debug == 1) $palyer_data[$key] = $img;
 
@@ -556,12 +556,12 @@ class Xml extends CI_Controller {
 					$file_stadium = $stadium['stadium_id'].'.txt';
 
 					//***** Save to File *******/
-					/*
+					
 					if($key == 'image')
 						SaveFile($val, $file_team, false, $path);
 					else
 						SaveFile($val, $file_stadium, false, $path);
-					*/
+					
 
 				}else if($key == 'coach'){
 
@@ -758,7 +758,7 @@ class Xml extends CI_Controller {
 			$input_team = array(
 				'team_id' => $team_data['team_id'],
 				'team_name_en' => $team_data['name'],
-				'league_id' => intval($league_id),
+				// 'league_id' => intval($league_id),
 				'manager_id' => intval($coach_id),
 				'stadium_id' => intval($team_data['venue_id'])
 			);
@@ -830,10 +830,15 @@ class Xml extends CI_Controller {
 			/************** Transfers**************/
 			//Debug($statistics);
 			if(isset($statistics['scoring_minutes'])){
+
+				// Delete _xml_scoring_minutes by team_id
+				$data_del['team_id'] = $team_league['team_id'];
+				$this->xml_model->delete_data('_xml_scoring_minutes', $data_del);
+
 				$this->xml_model->import_batch('_xml_scoring_minutes', $statistics['scoring_minutes']);
 				Debug($this->db->last_query());
 			}
-			UNSET($statistics['scoring_minutes']);
+			unset($statistics['scoring_minutes']);
 		}
 		if($import == 1 || $query == 1){
 
@@ -846,6 +851,7 @@ class Xml extends CI_Controller {
 					$statistics['team_id'] = intval($teamid);
 				}
 
+				unset($statistics['scoring_minutes']);
 				if(!$this->xml_model->ChkActive('_xml_statistics', 'team_id', $statistics)) {
 					
 					$this->xml_model->import('_xml_statistics', $statistics);
@@ -1256,6 +1262,7 @@ class Xml extends CI_Controller {
 			case 'portugal-PortugueseLiga': $feed_url = $this->xml_host.'soccerfixtures/portugal/PortugueseLiga'; break;
 			case 'thailand-PremierLeague': $feed_url = $this->xml_host.'soccerfixtures/thailand/PremierLeague'; break;
 			case 'worldcup': $feed_url = $this->xml_host.'soccerfixtures/worldcup/WorldCup'; break;
+			case 'euro': $feed_url = $this->xml_host.'soccerfixtures/eurocups/euro'; break;
 			default:
 
 				$feed_url = $this->xml_host.$this->xml_fixtures_results; break;
@@ -1870,13 +1877,14 @@ class Xml extends CI_Controller {
 		}
 
 		if($import == 1){
-			$lnk = base_url('fixtures/update/'.$team["tournament_id"].'/import');
-			echo "<br><a href='".$lnk."' target=_blank>Import To match fixture</a><br>";
+			if(isset($team["tournament_id"])){
+				$lnk = base_url('fixtures/update/'.$team["tournament_id"].'/import');
+				echo "<br><a href='".$lnk."' target=_blank>Import To match fixture</a><br>";				
+			}
+
 		}
 
 		if($debug == 1) echo "<hr>";
-
-
 
 		if($week){
 			$item['head']['code'] = 200;
@@ -2071,11 +2079,14 @@ class Xml extends CI_Controller {
 						// Debug($standings[$j]);
 						// die();
 
-						// $this->xml_model->chkupdate_xml_standing($standings[$j]['tournament_id'], $standings[$j]['team_id'], $standings[$j]);
-						// $res = $this->xml_model->get_xml_standing($standings[$j]['team_id'], $standings[$j]['tournament_id']);
-						// Debug($this->db->last_query());
-						// Debug($res);
-						
+						// UPDATE IF group != "Ranking of third-placed teams" 
+						if($standings[$j]['group_id'] != 704){
+
+							$this->xml_model->chkupdate_xml_standing($standings[$j]['tournament_id'], $standings[$j]['team_id'], $standings[$j]);
+							// $res = $this->xml_model->get_xml_standing($standings[$j]['team_id'], $standings[$j]['tournament_id']);
+							Debug($this->db->last_query());
+							// Debug($res);
+						}
 						// die();
 					}
 					$num_team++;
@@ -2403,6 +2414,8 @@ class Xml extends CI_Controller {
 			$feed_url = $this->xml_host.$this->xml_news_yesterday;
 		else if(($this->uri->segment(4) == 'lives') || ($this->uri->segment(4) == 'home')) 
 			$feed_url = $this->xml_host.$this->xml_news_lives;
+		else if($this->uri->segment(4) !== '') 
+			$feed_url = $this->xml_host.'soccernew/'.$this->uri->segment(4);
 		else if(!$this->uri->segment(4))
 			$feed_url = $this->xml_host.$this->xml_news_lives;
 		else{
@@ -2410,6 +2423,8 @@ class Xml extends CI_Controller {
 			switch($this->uri->segment(4)){
 				case 'worldcup': $feed_url = $this->xml_host.'soccernew/worldcup'; break;
 				case 'worldcup_shedule': $feed_url = $this->xml_host.'soccernew/worldcup_shedule'; break;
+				case 'eurocups': $feed_url = $this->xml_host.'soccernew/eurocups'; break;
+				case 'eurocups_shedule': $feed_url = $this->xml_host.'soccernew/eurocups_shedule'; break;
 				default:
 
 					$feed_url = $this->xml_host.'soccernew/'.trim($this->uri->segment(4));
@@ -2613,7 +2628,11 @@ class Xml extends CI_Controller {
 								// }
 
 								//Check match event
-								$all_event = @count($matches[$league_id][$j]['events']);
+								if(isset($matches[$league_id][$j]['events'])){
+									// Debug($matches[$league_id][$j]['events']);
+									$all_event = @count($matches[$league_id][$j]['events']);
+								}else
+									$all_event = 0;
 
 								for($k=0;$k<$all_event;$k++){
 
@@ -2706,9 +2725,9 @@ class Xml extends CI_Controller {
 		$program_id = 0;
 		$sel_date = '';
 
-		$action = 'xml/import_fixtures_results/json/worldcup';
+		$action = 'xml/import_fixtures_results/json/euro';
 		$link_chkdata = base_url($action);
-		// echo $link_chkdata."<hr>";
+		echo $link_chkdata."<hr>";
 
 		if($this->uri->segment(3) == 'query') $query = 1;
 		if($program_id == 0 && $sel_date == ''){
@@ -2727,8 +2746,8 @@ class Xml extends CI_Controller {
 		}
 
 		$this->update_match_lineup($sel_date);
-
-		/*
+		// Debug($this->db->last_query());
+		// die();
 		$res = $this->callApi($action, null, false, $host, true);
 		// Debug($res);
 		if($res->head->code == 200){
@@ -3059,7 +3078,7 @@ class Xml extends CI_Controller {
 			}
 		
 		}
-		*/
+		
 
 	}
 
@@ -4025,6 +4044,8 @@ class Xml extends CI_Controller {
 
 			break;
 		}
+
+		if($debug == 1) Debug($feed_url);
 
 		// $feed_url = 'https://www.goalserve.com/getfeed/c37c46d4313e43a899a3a3d00cbd454b/soccerhighlights/d-1';
 		// $feed_url = $this->xml_host.$this->xml_topscorers;

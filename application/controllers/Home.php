@@ -247,8 +247,8 @@ class Home extends CI_Controller {
 				"page_lastupdated_date" => $page_lastupdated_date,
 				"content_view" => 'home/index'
 			);
-			// $this->load->view('template-wc', $data);
-			$html = $this->load->view('template-wc', $data, true);
+
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			// $this->utils->setCacheRedis($cache_key_all, $html);
@@ -309,7 +309,7 @@ class Home extends CI_Controller {
 
 		$html = '<section class="warpper bg-blue result-head">
 			<div>
-				<h1>ผลบอลโลก <span>วันที่ '.$wc_date_th.'</span></h1>
+				<h1>ผลบอลยูโร <span>วันที่ '.$wc_date_th.'</span></h1>
 				<div>';
 
 		$number_program = (count($fixtures_list) > 4) ? 4 : count($fixtures_list);
@@ -352,6 +352,7 @@ class Home extends CI_Controller {
 			$match_datetime_th = date('H:i', strtotime($kickoff.' +7 hour'));
 			// $match_datetime_th = date('H:i', strtotime($kickoff));
 
+			$logo_team1 = $hteam;
 			if(file_exists($this->base_path.$this->team_path.$hteam_id.'.txt')) {
 
 				$file = fopen($this->base_path.$this->team_path.$hteam_id.'.txt', 'r');
@@ -365,6 +366,7 @@ class Home extends CI_Controller {
 				$logo_team1 = $this->load_base64img($img_logo, 25, 15, $home_team);
 			}
 
+			$logo_team2 = $ateam;
 			if(file_exists($this->base_path.$this->team_path.$ateam_id.'.txt')) {
 
 				$file = fopen($this->base_path.$this->team_path.$ateam_id.'.txt', 'r');
@@ -380,7 +382,7 @@ class Home extends CI_Controller {
 
 			$link_teamhome = base_url('team/detail/'.$hteam_id);
 			$link_teamaway = base_url('team/detail/'.$ateam_id);
-			$link_matchdetail = base_url('match/detail/'.$program_id.'/'.$fix_id);
+			$link_matchdetail = base_url('program/detail/'.$program_id.'/'.$fix_id);
 
 			if($ft_result == '')
 				$ft_result = $hgoals.'-'.$agoals;
@@ -550,6 +552,7 @@ class Home extends CI_Controller {
 					$tmp = $sel_date;
 				}
 	
+				$logo_team1 = $hteam;
 				if(file_exists($this->base_path.$this->team_path.$hteam_id.'.txt')) {
 	
 					$file = fopen($this->base_path.$this->team_path.$hteam_id.'.txt', 'r');
@@ -563,6 +566,7 @@ class Home extends CI_Controller {
 					$logo_team1 = $this->load_base64img($img_logo, 25, 15, $home_team);
 				}
 	
+				$logo_team2 = $ateam;
 				if(file_exists($this->base_path.$this->team_path.$ateam_id.'.txt')) {
 	
 					$file = fopen($this->base_path.$this->team_path.$ateam_id.'.txt', 'r');
@@ -605,7 +609,7 @@ class Home extends CI_Controller {
 
 	public function block_standing($tournament_list, $data_list)
 	{
-		$arr_group = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H');
+		$arr_group = array('A', 'B', 'C', 'D', 'E', 'F');
 
 		$topscore = null;
 		// $topscore = $this->block_topscore();
@@ -618,7 +622,7 @@ class Home extends CI_Controller {
 
 		$html .= '<ul id="tab-menu">';
 
-		$number_group = 8;
+		$number_group = 6;
 		for($i=0;$i<$number_group;$i++){
 
 			if($i == 0){

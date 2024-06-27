@@ -1,5 +1,5 @@
 <div class="warpper bg-blue billboard">
-  <a href="https://www.ballnaja.com/" target="_blank"><img src="<?php echo base_url() ?>assets/images/banner-wc2022.webp" alt="บอลนะจ๊ะ" /></a>
+  <img src="./assets/images/banner/<?php echo _BANNER_BILLBOARD?>" alt="ยูโร 2024" />
 </div>
 <section class="warpper bg-white score-box">
   <div class="headline">

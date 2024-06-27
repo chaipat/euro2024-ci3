@@ -192,6 +192,7 @@ if ( ! function_exists('img'))
 
 		foreach ($src as $k => $v)
 		{
+			if(isset($v))
 			if ($k === 'src' && ! preg_match('#^(data:[a-z,;])|(([a-z]+:)?(?<!data:)//)#i', $v))
 			{
 				if ($index_page === TRUE)

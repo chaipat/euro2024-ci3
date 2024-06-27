@@ -17,7 +17,7 @@ class Api extends CI_Controller {
 		$this->tournament = $this->config->config['tournament'];
         $this->season = $this->config->config['season'];
 
-		$this->hostapi = 'https://worldcup2022-dev.ballnaja.com/';
+		$this->hostapi = '';
 
 	}
 
@@ -69,8 +69,4 @@ class Api extends CI_Controller {
 		ob_end_flush();
 	}
 
-	public function welcome()
-	{
-		$this->load->view('welcome_message');
-	}
 }

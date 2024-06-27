@@ -1,7 +1,18 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Player extends CI_Controller {
-	private $season_id;
-	protected $_page = 'player';
+	protected $season;
+	protected $season_id;
+	protected $tournament_id;
+	protected $tournament;
+	protected $date_start;
+	protected $datetime_start;
+	protected $team_path;
+	protected $stadium_path;
+	protected $base_path;
+	protected $profile_path;
+	protected $_page = 'ยสฟัำพ';
 	protected $_cache;
 
     public function __construct()    {
@@ -62,8 +73,8 @@ class Player extends CI_Controller {
 
 		$obj_list = $this->standing_model->get_xml_data(intval($tournament_id), 0, $round);
         // echo $this->db->last_query();
-		// Debug($obj_list);
-		// die();
+		Debug($obj_list);
+		die();
 		
 		if($datenow < $this->date_start){
 
@@ -125,9 +136,9 @@ class Player extends CI_Controller {
 		// $keywords = explode(',', _KEYWORD);
 		$social_block = $this->social_block($webtitle);
 
-		$keywords[] = 'ตารางคะแนนบอลโลก 2022';
+		$keywords[] = 'ตารางคะแนนบอลยูโร 2024';
 		$keywords[] = 'ตารางคะแนน';
-		$keywords[] = 'ตารางฟุตบอลโลก';
+		$keywords[] = 'ตารางฟุตบอลยูโร';
 		
 		$meta = array(
 			'title' => $webtitle,
@@ -135,8 +146,8 @@ class Player extends CI_Controller {
 			'keywords' => $keywords,
 			'page_image' => _COVER_WC2022,
 			"page_published_time" => $page_published_time,
-			"Author" => "Ballnaja",
-			"Copyright" => "Ballnaja"
+			"Author" => "",
+			"Copyright" => ""
 		);
 
 		$asset_css[] = 'jquery.fancybox.css';
@@ -147,7 +158,7 @@ class Player extends CI_Controller {
             "webtitle" => $webtitle,
             "breadcrumb" => $breadcrumb,
 			"menu" => $display_menu,
-			"head" => 'ตารางคะแนนบอลโลก',
+			"head" => 'ตารางคะแนนบอลยูโร',
 			"html" => $html,
 			"social_block" => $social_block,
 			"widgets_program" => $widgets_program,
@@ -159,7 +170,7 @@ class Player extends CI_Controller {
 			"content_view" => 'standing/view'
 		);
 		//$this->parser->parse('template',$data);
-        $this->load->view('template-wc',$data);
+        $this->load->view('template-euro',$data);
 	}
 
 	public function html()
@@ -225,7 +236,7 @@ class Player extends CI_Controller {
 			$short_name = $tournament_list[0]->short_name;
 			$season = $tournament_list[0]->season;
 
-			$create_date = $get_player[0]->create_date;
+			$create_date = isset($get_player[0]->create_date) ? $get_player[0]->create_date : '-';
 			$lastupdate_date = ($get_player[0]->lastupdate_date != '') ? $get_player[0]->lastupdate_date: $cur_date;
 
 			// $display_standing = $this->display_standing($standing_list);
@@ -304,8 +315,8 @@ class Player extends CI_Controller {
 				"page_lastupdated_date" => $page_lastupdated_date,
 				"content_view" => 'player/detail'
 			);
-			// $this->load->view('template-wc', $data);
-			$html = $this->load->view('template-wc', $data, true);
+			// $this->load->view('template-euro', $data);
+			$html = $this->load->view('template-euro', $data, true);
 
 			//cache to redis
 			$this->utils->setCacheRedis($cache_key, $html);
@@ -412,6 +423,8 @@ class Player extends CI_Controller {
 		// $img_cover_news = '<figure><img src="'.$img_url.'" alt="'.$title.'" title="'.$title.'" /></figure>';
 		$link_profile = base_url('player/profile/'.$profile_id.'/'.$team_id);
 
+		$show_height = ($height) ? str_replace('cm', 'ซม.', $height) : 'ซม.';
+		$show_weight = ($weight) ? str_replace('kg', 'กก.', $weight) : 'กก.';
 		$html .= '<div>
 			'.$player_img.'
 			<h1><span>'.$player_name_th.'</span>'.$player_name.'</h1>
@@ -423,8 +436,8 @@ class Player extends CI_Controller {
 			<li><strong>ทีมชาติ</strong><span>: '.$team_name.'</span></li>
 			<li><strong>วันเกิด</strong><span>: '.$birthdate_th.'</span></li>
 			<li><strong>อายุ</strong><span>: '.$age.' ปี</span></li>
-			<li><strong>ส่วนสูง</strong><span>: '.str_replace('cm', 'ซม.', $height).'</span></li>
-			<li><strong>น้ำหนัก</strong><span>: '.str_replace('kg', 'กก.', $weight).'</span></li>
+			<li><strong>ส่วนสูง</strong><span>: '.$show_height.'</span></li>
+			<li><strong>น้ำหนัก</strong><span>: '.$show_weight.'</span></li>
 		</ul>
 		
 		<h2>สถิติในฟุตบอล 2022</h2>

@@ -1,7 +1,5 @@
 <div class="warpper bg-blue billboard">
-    <a href="https://www.ballnaja.com/" target="_blank">
-      <img src="<?php echo base_url() ?>assets/images/banner-wc2022.webp" alt="บอลนะจ๊ะ" />
-    </a>
+  <img src="./assets/images/banner/<?php echo _BANNER_BILLBOARD?>" alt="ยูโร 2024" />
   </div>
   <section class="warpper bg-white score-box">
     <div class="headline">
@@ -14,7 +12,7 @@
     <div class="consihighlight">
       <?php echo $display_analyze ?>
       <aside class="sidebar">
-        <?php $this->load->view('widgets-rectangle1'); ?>
+        <?php //$this->load->view('widgets-rectangle1'); ?>
       </aside>
     </div>
     <div class="container-main">
@@ -31,9 +29,9 @@
 		if(isset($widgets_program)){
 			$this->load->view('widgets-program', $widgets_program);
 		}
-		$this->load->view('widgets-facebook');
+		// $this->load->view('widgets-facebook');
 
-		$this->load->view('widgets-rectangle2');
+		// $this->load->view('widgets-rectangle2');
 
 		if(isset($widgets_result) && $widgets_result != ''){
 			$this->load->view('widgets-result', $widgets_result);

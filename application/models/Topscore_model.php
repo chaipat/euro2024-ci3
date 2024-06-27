@@ -1,16 +1,16 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Topscore_model extends CI_Model
 {
     protected $prefix;
-
     public function __construct()
     {
         parent::__construct();
 
         $this->load->database();
-		// $this->prefix = $this->db->dbprefix;
-        $this->prefix = 'ba';
+		$this->prefix = $this->db->dbprefix;
+        // $this->prefix = 'ba';
     }
 
     function get_topscore()
@@ -137,7 +137,7 @@ class Topscore_model extends CI_Model
         return $query->result_object();
     }
 
-    function store_xml_top($tournament_id = 0, $pos = 0, $data, $table = '_xml_topassist'){
+    function store_xml_top($tournament_id, $pos = 0, $data = array(), $table = '_xml_topassist'){
 
         if ($tournament_id > 0 && $pos > 0) {
             
@@ -156,7 +156,7 @@ class Topscore_model extends CI_Model
         }
     }
 
-    function store($id = 0, $data, $table = '_standing', $field = 'standing_id'){
+    function store($id, $data = array(), $table = '_standing', $field = 'standing_id'){
 
         if ($id > 0) {
 
@@ -173,7 +173,7 @@ class Topscore_model extends CI_Model
         }
     }
 
-    function reset($week = 0, $data){
+    function reset($week, $data = array()){
         if ($week > 0) {
             $this->db->where('round', $week);
             $this->db->update('_standing', $data);
